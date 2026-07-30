@@ -1,117 +1,315 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8"><title>H&B BOARD</title>
-<style>
-  body { font-family: sans-serif; display: flex; justify-content: center; align-items: flex-start; background: #f0f4f8; min-height: 100vh; margin: 0; padding: 10px; box-sizing: border-box; }
-  #wp:fullscreen { background: #f0f4f8; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; width: 100vw; height: 100vh; padding-top: 10px; }
-  .fs { background: #64748b; color: #fff; border: none; padding: 8px 16px; font-weight: bold; border-radius: 8px; cursor: pointer; margin-bottom: 8px; }
-  .mn { display: flex; width: 100%; max-width: 820px; background: #fff; border-radius: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); overflow: hidden; border: 1px solid #e2e8f0; }
-  .lf, .rg { flex: 1; padding: 15px; text-align: center; } .rg { background: #fbfcfe; text-align: left; display: flex; flex-direction: column; gap: 8px; }
-  .hd { background: linear-gradient(135deg,#1e1b4b,#4338ca); color: #fff; padding: 12px; width: 100%; text-align: center; border-radius: 20px 20px 0 0; box-sizing: border-box; } .hd h2 { margin: 0; font-size: 18px; }
-  .tb { display: flex; background: #f1f5f9; padding: 4px; border-radius: 10px; margin-bottom: 10px; }
-  .t-btn { flex: 1; background: transparent; color: #64748b; border: none; padding: 6px; font-size: 12px; font-weight: bold; border-radius: 6px; cursor: pointer; }
-  .t-btn.active { background: #fff; color: #4338ca; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-  .bx { background: #f1f5f9; padding: 4px 10px; border-radius: 6px; font-size: 12px; display: inline-block; margin-bottom: 10px; color: #475569; font-weight: bold; }
-  .bd { padding: 8px; border-radius: 12px; font-size: 13px; font-weight: bold; margin-bottom: 10px; background: #f1f5f9; color: #94a3b8; }
-  .bd.status-normal { background: #f8fafc; color: #334155; border: 1px solid #e2e8f0; }
-  .bd.status-error { background: #fef2f2; color: #991b1b; border: 1px solid #fca5a5; }
-  .bd.status-success { background: #f0fdf4; color: #166534; border: 1px solid #86efac; }
-  .sls { display: flex; justify-content: center; gap: 8px; margin-bottom: 10px; }
-  .sl { width: 40px; height: 45px; border: 2px solid #cbd5e1; border-radius: 10px; font-size: 20px; font-weight: bold; display: flex; align-items: center; justify-content: center; background: #f8fafc; }
-  .sl.act { border-color: #4338ca; background: #fff; }
-  .kb { display: flex; flex-direction: column; gap: 6px; } .rw { display: flex; gap: 6px; }
-  .kb button { flex: 1; padding: 12px; font-size: 16px; font-weight: bold; border-radius: 10px; border: 1px solid #e2e8f0; background: #f8fafc; color: #334155; cursor: pointer; }
-  .kb button:active { background: #e2e8f0; } .kb .bk { background: #fee2e2; color: #991b1b; } .kb .en { background: #4338ca; color: #fff; flex: 1.5; }
-  #reset { width: 100%; background: #10b981; color: #fff; padding: 12px; border: none; border-radius: 12px; font-weight: bold; font-size: 16px; cursor: pointer; }
-  .rg h4 { margin: 0; font-size: 13px; color: #475569; }
-  .log { height: 180px; overflow-y: auto; font-size: 12px; background: #fff; padding: 10px; border-radius: 10px; border: 1px solid #e2e8f0; box-sizing: border-box; }
-  .item { margin-bottom: 4px; padding-bottom: 4px; border-bottom: 1px dashed #e2e8f0; }
-  .gd { display: flex; flex-direction: column; gap: 3px; background: #e2e8f0; padding: 4px; border-radius: 10px; }
-  .g-rw { display: flex; gap: 3px; align-items: center; }
-  .g-lbl { width: 16px; font-weight: bold; font-size: 12px; color: #475569; text-align: center; }
-  .g-btn { flex: 1; padding: 5px 0; font-size: 11px; font-weight: bold; border: 1px solid #cbd5e1; border-radius: 6px; background: #fff; color: #475569; cursor: pointer; text-align: center; }
-  .g-btn.m-no { background: #f1f5f9; color: #cbd5e1; text-decoration: line-through; opacity: 0.5; }
-  .g-btn.m-ok { background: #dcfce7; color: #15803d; border-color: #86efac; }
-  .rule-box { background: #eff6ff; border: 1px solid #bfdbfe; padding: 10px; border-radius: 10px; font-size: 11px; color: #1e3a8a; line-height: 1.5; }
-  .rule-box ul { margin: 4px 0 0 0; padding-left: 15px; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HIT & BLOW PRO - PERFECT WIDE</title>
+    <style>
+        /* 💡 画面の一番上ぴったりに吸着させ、無駄な余白を完全にゼロにする設定 */
+        body { 
+            font-family: sans-serif; 
+            display: flex; 
+            justify-content: center; 
+            align-items: flex-start; 
+            background: #f0f4f8; 
+            min-height: 100vh; 
+            margin: 0; 
+            padding: 10px; 
+            box-sizing: border-box; 
+        }
+        
+        /* 💡 フルスクリーン（全画面表示）にした時も上詰めで余白を作らない */
+        #app-wrapper:fullscreen { 
+            background: #f0f4f8; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: flex-start; 
+            width: 100vw; 
+            height: 100vh; 
+            padding-top: 10px; 
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+        
+        .fs-btn { 
+            background: #64748b; 
+            color: #fff; 
+            border: none; 
+            padding: 8px 16px; 
+            font-size: 13px; 
+            font-weight: bold; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            margin-bottom: 10px; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+        }
+        .fs-btn:hover { background: #475569; }
+
+        /* 左右2分割（2カラム）のメインコンテナ */
+        .app-main { 
+            display: flex; 
+            width: 100%; 
+            max-width: 820px; 
+            background: #fff; 
+            border-radius: 24px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15); 
+            overflow: hidden; 
+            border: 1px solid #e2e8f0; 
+        }
+        
+        /* 左半分：ゲーム操作パネル */
+        .left-panel { 
+            flex: 1; 
+            padding: 20px; 
+            border-right: 1px solid #f1f5f9; 
+            display: flex; 
+            flex-direction: column; 
+            text-align: center;
+        }
+        
+        /* 右半分：推理ボード・ルール・履歴パネル */
+        .right-panel { 
+            flex: 1; 
+            padding: 20px; 
+            background: #fbfcfe; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 12px; 
+            text-align: left; 
+        }
+
+        .hd { 
+            background: linear-gradient(135deg,#1e1b4b,#4338ca); 
+            color: #fff; 
+            padding: 15px; 
+            width: 100%; 
+            text-align: center; 
+            box-sizing: border-box; 
+            border-radius: 24px 24px 0 0; 
+        } 
+        .hd h2 { margin: 0; font-size: 20px; letter-spacing: 1px; }
+        
+        .tabs { display: flex; background: #f1f5f9; padding: 4px; border-radius: 10px; margin-bottom: 15px; }
+        .t-btn { flex: 1; background: transparent; color: #64748b; border: none; padding: 6px; font-size: 12px; font-weight: bold; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
+        .t-btn.active { background: #fff; color: #4338ca; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        
+        .box { background: #f1f5f9; padding: 4px 10px; border-radius: 6px; font-size: 12px; display: inline-block; margin-bottom: 12px; color: #475569; font-weight: bold; align-self: center; }
+        .bd { padding: 10px; border-radius: 12px; font-size: 13px; font-weight: bold; margin-bottom: 15px; background: #f1f5f9; color: #94a3b8; text-align: center; }
+        .bd.status-normal { background: #f8fafc; color: #334155; border: 1px solid #e2e8f0; }
+        .bd.status-error { background: #fef2f2; color: #991b1b; border: 1px solid #fca5a5; }
+        .bd.status-success { background: #f0fdf4; color: #166534; border: 1px solid #86efac; }
+        
+        .slots { display: flex; justify-content: center; gap: 8px; margin-bottom: 15px; }
+        .sl { width: 45px; height: 50px; border: 2px solid #cbd5e1; border-radius: 10px; font-size: 22px; font-weight: bold; display: flex; align-items: center; justify-content: center; background: #f8fafc; }
+        .sl.act { border-color: #4338ca; background: #fff; box-shadow: 0 0 8px rgba(67, 56, 202, 0.15); }
+        
+        .kb { display: flex; flex-direction: column; gap: 6px; } .row { display: flex; gap: 6px; }
+        .kb button { flex: 1; padding: 12px; font-size: 16px; font-weight: bold; border-radius: 10px; border: 1px solid #e2e8f0; background: #f8fafc; color: #334155; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .kb button:active { background: #e2e8f0; } 
+        .kb .bk { background: #fee2e2; color: #991b1b; border-color: #fca5a5; } 
+        .kb .en { background: #4338ca; color: #fff; border-color: #4338ca; flex: 1.5; }
+        
+        #reset { width: 100%; background: #10b981; color: #fff; padding: 12px; border: none; border-radius: 12px; font-weight: bold; font-size: 16px; cursor: pointer; }
+        
+        .right-panel h4 { margin: 0; font-size: 13px; color: #475569; }
+        
+        /* 💡 履歴ログを今までの2倍近く、縦幅180pxに特大化して見やすく */
+        .log { 
+            height: 180px; 
+            overflow-y: auto; 
+            font-size: 12px; 
+            background: #fff; 
+            padding: 10px; 
+            border-radius: 10px; 
+            border: 1px solid #e2e8f0; 
+            box-sizing: border-box; 
+        }
+        .item { margin-bottom: 4px; padding-bottom: 4px; border-bottom: 1px dashed #e2e8f0; line-height: 1.4; }
+        
+        /* 推理グリッドボード */
+        .board-grid { display: flex; flex-direction: column; gap: 3px; background: #e2e8f0; padding: 5px; border-radius: 10px; }
+        .board-row { display: flex; gap: 3px; align-items: center; }
+        .board-lbl { width: 16px; font-weight: bold; font-size: 12px; color: #475569; text-align: center; }
+        .board-btn { flex: 1; padding: 5px 0; font-size: 11px; font-weight: bold; border: 1px solid #cbd5e1; border-radius: 6px; background: #fff; color: #475569; cursor: pointer; text-align: center; }
+        .board-btn.mode-none { background: #f1f5f9; color: #cbd5e1; text-decoration: line-through; opacity: 0.5; }
+        .board-btn.mode-fix { background: #dcfce7; color: #15803d; border-color: #86efac; }
+        
+        /* 💡 ルール説明エリア：重複あり/なしの詳しい意味を解説 */
+        .rule-box { 
+            background: #eff6ff; 
+            border: 1px solid #bfdbfe; 
+            padding: 10px; 
+            border-radius: 10px; 
+            font-size: 11px; 
+            color: #1e3a8a; 
+            line-height: 1.5; 
+        }
+        .rule-box ul { margin: 4px 0 0 0; padding-left: 15px; }
+    </style>
 </head>
 <body>
-<div id="wp" style="display: flex; flex-direction: column; align-items: center; width: 100%;">
-  <button class="fs" onclick="tgFS()">🖥 フルスクリーン</button>
-  <div class="hd"><h2>HIT & BLOW PRO</h2></div>
-  <div class="mn">
-    <div class="lf">
-      <div class="tb">
+
+<div id="app-wrapper" style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+  <button id="fs-btn" class="fs-btn" onclick="toggleFS()">🖥 フルスクリーン</button>
+  
+  <div class="hd">
+    <h2>HIT & BLOW PRO</h2>
+  </div>
+  
+  <div class="app-main">
+    <!-- 左パネル：ゲームの操作・入力 -->
+    <div class="left-panel">
+      <div class="tabs">
         <button id="t-allow" class="t-btn active" onclick="setM('allow_duplicates')">重複あり</button>
         <button id="t-no" class="t-btn" onclick="setM('no_duplicates')">重複なし</button>
       </div>
-      <div class="bx">挑戦回数: <span id="count">0</span> 回</div>
+      
+      <div class="box">挑戦回数: <span id="count">0</span> 回</div>
       <div id="badge" class="bd">入力待機中...</div>
-      <div class="sls"><div id="s0" class="sl"></div><div id="s1" class="sl"></div><div id="s2" class="sl"></div><div id="s3" class="sl"></div></div>
+      
+      <div class="slots">
+        <div id="s0" class="sl"></div>
+        <div id="s1" class="sl"></div>
+        <div id="s2" class="sl"></div>
+        <div id="s3" class="sl"></div>
+      </div>
+      
       <div id="kbox" class="kb">
-        <div class="rw"><button onclick="pK('A')">A</button><button onclick="pK('B')">B</button><button onclick="pK('C')">C</button></div>
-        <div class="rw"><button onclick="pK('D')">D</button><button onclick="pK('E')">E</button><button onclick="pK('F')">F</button></div>
-        <div class="rw"><button class="bk" onclick="pB()">⌫</button><button class="en" id="sub" onclick="send()">チェック</button></div>
+        <div class="row"><button onclick="pK('A')">A</button><button onclick="pK('B')">B</button><button onclick="pK('C')">C</button></div>
+        <div class="row"><button onclick="pK('D')">D</button><button onclick="pK('E')">E</button><button onclick="pK('F')">F</button></div>
+        <div class="row"><button class="bk" onclick="pB()">⌫</button><button class="en" id="sub" onclick="send()">チェック</button></div>
       </div>
       <button id="reset" onclick="rst()" style="display:none;">もう一度遊ぶ</button>
     </div>
-    <div class="rg">
+    
+    <!-- 右パネル：解説・推理ボード・履歴 -->
+    <div class="right-panel">
+      <!-- 💡 「重複」についての詳しい意味を書き足した説明枠 -->
       <div class="rule-box">
-        💡 <b>ルール</b>：A〜Fの4文字を当てよう！
+        💡 <b>ゲームのルール</b>：A〜Fの4文字のコードを当てよう！
         <ul>
-          <li>🔴 <b>H</b>：文字も位置も的中 / 🔵 <b>B</b>：文字は一致、位置違い</li>
-          <li>🔀 <b>重複あり</b>：<code>AAAA</code>や<code>BBAB</code>など被りありの難関モード</li>
-          <li>🔒 <b>重複なし</b>：<code>ABCD</code>など、すべて違う文字の定番モード</li>
+          <li>🔴 <b>H (Hit)</b>：文字も位置もピッタリ的中！</li>
+          <li>🔵 <b>B (Blow)</b>：文字は合っているが、位置が違う！</li>
+          <li>🔀 <b>重複あり</b>：<code>AAAA</code>や<code>BBAB</code>のように同じ文字が何度も使われる難関モード！</li>
+          <li>🔒 <b>重複なし</b>：4文字すべて違う文字（<code>ABCD</code>など）が選ばれる定番モード！</li>
         </ul>
       </div>
-      <h4>🧠 推理ボード</h4>
-      <div class="gd">
-        <div class="g-rw"><div class="g-lbl"></div><div class="g-btn" style="background:none;border:none;">1桁</div><div class="g-btn" style="background:none;border:none;">2桁</div><div class="g-btn" style="background:none;border:none;">3桁</div><div class="g-btn" style="background:none;border:none;">4桁</div></div>
+      
+      <h4>🧠 推理ボード（タップで ❌ ➔ 🎯 ➔ 戻る）</h4>
+      <div class="board-grid">
+        <div class="board-row">
+            <div class="board-lbl"></div>
+            <div class="board-btn" style="background:none;border:none;cursor:default;">1桁</div>
+            <div class="board-btn" style="background:none;border:none;cursor:default;">2桁</div>
+            <div class="board-btn" style="background:none;border:none;cursor:default;">3桁</div>
+            <div class="board-btn" style="background:none;border:none;cursor:default;">4桁</div>
+        </div>
         <script>
-          ["A","B","C","D","E","F"].forEach(c => {
-            document.write(`<div class="g-rw"><div class="g-lbl">${c}</div>`);
-            for(let i=0;i<4;i++) document.write(`<button id="b-${c}-${i}" class="g-btn" onclick="cc('${c}',${i})">-</button>`);
+          const chars = ["A", "B", "C", "D", "E", "F"];
+          chars.forEach(c => {
+            document.write(`<div class="board-row"><div class="board-lbl">${c}</div>`);
+            for(let i=0; i<4; i++) {
+              document.write(`<button id="b-${c}-${i}" class="board-btn" onclick="cc('${c}', ${i})">-</button>`);
+            }
             document.write(`</div>`);
           });
         </script>
       </div>
-      <h4>📜 履歴（ヒント）</h4><div id="log" class="log"></div>
+      
+      <h4>📜 履歴（ヒント）</h4>
+      <div id="log" class="log"></div>
     </div>
   </div>
 </div>
 <script>
   const V = ["A", "B", "C", "D", "E", "F"];
   let m = 'allow_duplicates', cur = [], sec = [], att = 0;
-  function rst_bg(tm) { if (tm) m = tm; att = 0; sec = m === "no_duplicates" ? V.sort(() => 0.5 - Math.random()).slice(0, 4) : Array.from({length: 4}, () => V[Math.floor(Math.random() * V.length)]); }
+
+  // ゲームの正解を新しく作る処理
+  function rst_bg(tm) {
+    if (tm) m = tm;
+    att = 0;
+    sec = m === "no_duplicates" ? 
+      V.sort(() => 0.5 - Math.random()).slice(0, 4) : 
+      Array.from({length: 4}, () => V[Math.floor(Math.random() * V.length)]);
+  }
   rst_bg();
-  function tgFS() { const el = document.getElementById('wp'); if (!document.fullscreenElement) el.requestFullscreen(); else document.exitFullscreen(); }
+
+  // 本物のフルスクリーン切り替え処理
+  function toggleFS() {
+    const el = document.getElementById('app-wrapper');
+    const btn = document.getElementById('fs-btn');
+    if (!document.fullscreenElement) {
+      el.requestFullscreen().then(() => { btn.innerText = "✖ フルスクリーン解除"; }).catch(() => {});
+    } else {
+      document.exitFullscreen();
+      btn.innerText = "🖥 フルスクリーン";
+    }
+  }
+
+  // 画面のスロット表示を更新
+  function up() { 
+    for(let i=0;i<4;i++){ 
+        const s=document.getElementById('s'+i); 
+        s.innerText=cur[i]||""; 
+        s.className=cur[i]?"sl act":"sl"; 
+    } 
+  }
+  
+  // 入力キーボードが押されたとき
+  function pK(c) { 
+    if(cur.length>=4)return; 
+    if(m==='no_duplicates'&&cur.includes(c)){ 
+        document.getElementById('badge').innerText="❌ 重複NGモードです！"; 
+        return; 
+    } 
+    cur.push(c); 
+    up(); 
+  }
+  
+  function pB() { cur.pop(); up(); }
+  
+  // 推理マスのカチカチ切り替え
   function cc(c, pos) {
     const b = document.getElementById(`b-${c}-${pos}`);
-    if (b.innerText === "-") { b.innerText = "❌"; b.className = "g-btn m-no"; }
-    else if (b.innerText === "❌") { b.innerText = "🎯"; b.className = "g-btn m-ok"; }
-    else { b.innerText = "-"; b.className = "g-btn"; }
+    if (b.innerText === "-") { b.innerText = "❌"; b.className = "board-btn mode-none"; }
+    else if (b.innerText === "❌") { b.innerText = "🎯"; b.className = "board-btn mode-fix"; }
+    else { b.innerText = "-"; b.className = "board-btn"; }
   }
-  function up() { for(let i=0;i<4;i++){ const s=document.getElementById('s'+i); s.innerText=cur[i]||""; s.className=cur[i]?"sl act":"sl"; } }
-  function pK(c) { if(cur.length>=4)return; if(m==='no_duplicates'&&cur.includes(c)){ document.getElementById('badge').innerText="❌ 重複NG！"; return; } cur.push(c); up(); }
-  function pB() { cur.pop(); up(); }
+
   function setM(tm) { if(m===tm)return; document.getElementById('t-allow').className=tm==='allow_duplicates'?'t-btn active':'t-btn'; document.getElementById('t-no').className=tm==='no_duplicates'?'t-btn active':'t-btn'; fRst(tm); }
+
+  // チェックボタンが押されたとき（Hit & Blow 計算）
   function send() { 
-    if(cur.length!==4) return; att++; const inp = cur.join(''); let h = 0, b = 0, s_rem = [], g_rem = [];
+    if(cur.length!==4){ document.getElementById('badge').innerText="❌ 4文字選んでね！"; return; }
+    att++;
+    const inp = cur.join('');
+    let h = 0, b = 0, s_rem = [], g_rem = [];
     for (let i = 0; i < 4; i++) { if (cur[i] === sec[i]) h++; else { s_rem.push(sec[i]); g_rem.push(cur[i]); } }
     for (let x of g_rem) { let idx = s_rem.indexOf(x); if (idx > -1) { b++; s_rem.splice(idx, 1); } }
-    const b_el = document.getElementById('badge'); document.getElementById('count').innerText = att;
-    let hst = `🔠 <b>${inp}</b> ➔ 🔴 <b>${h}</b>H / 🔵 <b>${b}</b>B`;
+    
+    const lbl = m === "allow_duplicates" ? "重複あり" : "重複なし";
+    const b_el = document.getElementById('badge');
+    document.getElementById('count').innerText = att;
+    
+    let hst = "";
     if (h === 4) {
-      b_el.innerText = `🎉 正解！【${inp}】`; b_el.className = "bd status-success"; hst = `🎯 <b>${inp}</b> ➔ ✨ Clear`;
+      b_el.innerText = `🎉 正解！【${inp}】`; b_el.className = "bd status-success";
+      hst = `🎯 <b>${inp}</b> ➔ ✨ Clear (${lbl})`;
       document.getElementById('sub').disabled = true; document.getElementById('kbox').style.display = 'none'; document.getElementById('reset').style.display = 'block';
-    } else { b_el.innerText = `【${inp}】の結果`; b_el.className = "bd status-normal"; }
-    const l = document.getElementById('log'); const i = document.createElement('div'); i.className = 'item'; i.innerHTML = hst; l.insertBefore(i, l.firstChild); cur = []; up();
+    } else {
+      b_el.innerText = `【${inp}】の結果`; b_el.className = "bd status-normal";
+      hst = `🔠 <b>${inp}</b> ➔ 🔴 <b>${h}</b>H / 🔵 <b>${b}</b>B <small style="color:#94a3b8">(${lbl})</small>`;
+    }
+    const l = document.getElementById('log'); const i = document.createElement('div'); i.className = 'item'; i.innerHTML = hst; l.insertBefore(i, l.firstChild);
+    cur = []; up();
   }
-  function cBd() { V.forEach(c => { for(let i=0; i<4; i++) { const b = document.getElementById(`b-${c}-${i}`); b.innerText = "-"; b.className = "g-btn"; } }); }
-  function rst() { document.getElementById('sub').disabled=false; document.getElementById('kbox').style.display='flex'; document.getElementById('reset').style.display='none'; document.getElementById('badge').innerText="入力待機中..."; document.getElementById('count').innerText="0"; document.getElementById('log').innerHTML=""; cur=[]; up(); cBd(); rst_bg(); }
-  function fRst(tm) { document.getElementById('sub').disabled=false; document.getElementById('kbox').style.display='flex'; document.getElementById('reset').style.display='none'; document.getElementById('badge').innerText="新ゲーム開始！"; document.getElementById('count').innerText="0"; document.getElementById('log').innerHTML=""; cur=[]; up(); cBd(); rst_bg(tm); }
+
+  function cBd() { V.forEach(c => { for(let i=0; i<4; i++) { const b = document.getElementById(`b-${c}-${i}`); b.innerText = "-"; b.className = "board-btn"; } }); }
+  function rst() { document.getElementById('sub').disabled=false; document.getElementById('kbox').style.display='flex'; document.getElementById('reset').style.display='none'; const b=document.getElementById('badge'); b.innerText="入力待機中..."; b.className="bd"; document.getElementById('count').innerText="0"; document.getElementById('log').innerHTML=""; cur=[]; up(); cBd(); rst_bg(); }
+  function fRst(tm) { document.getElementById('sub').disabled=false; document.getElementById('kbox').style.display='flex'; document.getElementById('reset').style.display='none'; const b=document.getElementById('badge'); b.innerText="新ゲーム開始！"; b.className="bd"; document.getElementById('count').innerText="0"; document.getElementById('log').innerHTML=""; cur=[]; up(); cBd(); rst_bg(tm); }
 </script>
 </body>
 </html>
+
