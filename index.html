@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"><title>H&B BOARD</title>
+<style>
+  body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; background: #f0f4f8; min-height: 100vh; margin: 0; padding: 10px; box-sizing: border-box; }
+  #wp:fullscreen { background: #f0f4f8; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100vw; height: 100vh; }
+  .fs { background: #64748b; color: #fff; border: none; padding: 8px 16px; font-weight: bold; border-radius: 8px; cursor: pointer; margin-bottom: 8px; }
+  .mn { display: flex; width: 100%; max-width: 760px; background: #fff; border-radius: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); overflow: hidden; border: 1px solid #e2e8f0; }
+  .lf, .rg { flex: 1; padding: 15px; text-align: center; } .rg { background: #fbfcfe; text-align: left; display: flex; flex-direction: column; gap: 8px; }
+  .hd { background: linear-gradient(135deg,#1e1b4b,#4338ca); color: #fff; padding: 12px; width: 100%; text-align: center; border-radius: 20px 20px 0 0; box-sizing: border-box; } .hd h2 { margin: 0; font-size: 18px; }
+  .tb { display: flex; background: #f1f5f9; padding: 4px; border-radius: 10px; margin-bottom: 10px; }
+  .t-btn { flex: 1; background: transparent; color: #64748b; border: none; padding: 6px; font-size: 12px; font-weight: bold; border-radius: 6px; cursor: pointer; }
+  .t-btn.active { background: #fff; color: #4338ca; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+  .bx { background: #f1f5f9; padding: 4px 10px; border-radius: 6px; font-size: 12px; display: inline-block; margin-bottom: 10px; color: #475569; font-weight: bold; }
+  .bd { padding: 8px; border-radius: 12px; font-size: 13px; font-weight: bold; margin-bottom: 10px; background: #f1f5f9; color: #94a3b8; }
+  .bd.status-normal { background: #f8fafc; color: #334155; border: 1px solid #e2e8f0; }
+  .bd.status-error { background: #fef2f2; color: #991b1b; border: 1px solid #fca5a5; }
+  .bd.status-success { background: #f0fdf4; color: #166534; border: 1px solid #86efac; }
+  .sls { display: flex; justify-content: center; gap: 8px; margin-bottom: 10px; }
+  .sl { width: 40px; height: 45px; border: 2px solid #cbd5e1; border-radius: 10px; font-size: 20px; font-weight: bold; display: flex; align-items: center; justify-content: center; background: #f8fafc; }
+  .sl.act { border-color: #4338ca; background: #fff; }
+  .kb { display: flex; flex-direction: column; gap: 6px; } .rw { display: flex; gap: 6px; }
+  .kb button { flex: 1; padding: 12px; font-size: 16px; font-weight: bold; border-radius: 10px; border: 1px solid #e2e8f0; background: #f8fafc; color: #334155; cursor: pointer; }
+  .kb button:active { background: #e2e8f0; } .kb .bk { background: #fee2e2; color: #991b1b; } .kb .en { background: #4338ca; color: #fff; flex: 1.5; }
+  #reset { width: 100%; background: #10b981; color: #fff; padding: 12px; border: none; border-radius: 12px; font-weight: bold; font-size: 16px; cursor: pointer; }
+  .rg h4 { margin: 0; font-size: 13px; color: #475569; }
+  .log { height: 110px; overflow-y: auto; font-size: 12px; background: #fff; padding: 10px; border-radius: 10px; border: 1px solid #e2e8f0; box-sizing: border-box; }
+  .item { margin-bottom: 4px; padding-bottom: 4px; border-bottom: 1px dashed #e2e8f0; }
+  .gd { display: flex; flex-direction: column; gap: 3px; background: #e2e8f0; padding: 4px; border-radius: 10px; }
+  .g-rw { display: flex; gap: 3px; align-items: center; }
+  .g-lbl { width: 16px; font-weight: bold; font-size: 12px; color: #475569; text-align: center; }
+  .g-btn { flex: 1; padding: 5px 0; font-size: 11px; font-weight: bold; border: 1px solid #cbd5e1; border-radius: 6px; background: #fff; color: #475569; cursor: pointer; text-align: center; }
+  .g-btn.m-no { background: #f1f5f9; color: #cbd5e1; text-decoration: line-through; opacity: 0.5; }
+  .g-btn.m-ok { background: #dcfce7; color: #15803d; border-color: #86efac; }
+</style>
+</head>
+<body>
+<div id="wp" style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+  <button class="fs" onclick="tgFS()">🖥 フルスクリーン</button>
+  <div class="hd"><h2>HIT & BLOW PRO</h2></div>
+  <div class="mn">
+    <div class="lf">
+      <div class="tb">
+        <button id="t-allow" class="t-btn active" onclick="setM('allow_duplicates')">重複あり</button>
+        <button id="t-no" class="t-btn" onclick="setM('no_duplicates')">重複なし</button>
+      </div>
+      <div class="bx">挑戦回数: <span id="count">0</span> 回</div>
+      <div id="badge" class="bd">入力待機中...</div>
+      <div class="sls"><div id="s0" class="sl"></div><div id="s1" class="sl"></div><div id="s2" class="sl"></div><div id="s3" class="sl"></div></div>
+      <div id="kbox" class="kb">
+        <div class="rw"><button onclick="pK('A')">A</button><button onclick="pK('B')">B</button><button onclick="pK('C')">C</button></div>
+        <div class="rw"><button onclick="pK('D')">D</button><button onclick="pK('E')">E</button><button onclick="pK('F')">F</button></div>
+        <div class="rw"><button class="bk" onclick="pB()">⌫</button><button class="en" id="sub" onclick="send()">チェック</button></div>
+      </div>
+      <button id="reset" onclick="rst()" style="display:none;">もう一度遊ぶ</button>
+    </div>
+    <div class="rg">
+      <h4>🧠 推理ボード（タップで ❌ ➔ 🎯 ➔ 戻る）</h4>
+      <div class="gd">
+        <div class="g-rw"><div class="g-lbl"></div><div class="g-btn" style="background:none;border:none;">1桁</div><div class="g-btn" style="background:none;border:none;">2桁</div><div class="g-btn" style="background:none;border:none;">3桁</div><div class="g-btn" style="background:none;border:none;">4桁</div></div>
+        <script>
+          ["A","B","C","D","E","F"].forEach(c => {
+            document.write(`<div class="g-rw"><div class="g-lbl">${c}</div>`);
+            for(let i=0;i<4;i++) document.write(`<button id="b-${c}-${i}" class="g-btn" onclick="cc('${c}',${i})">-</button>`);
+            document.write(`</div>`);
+          });
+        </script>
+      </div>
+      <h4>📜 履歴</h4><div id="log" class="log"></div>
+    </div>
+  </div>
+</div>
+<script>
+  const V = ["A", "B", "C", "D", "E", "F"];
+  let m = 'allow_duplicates', cur = [], sec = [], att = 0;
+  function rst_bg(tm) { if (tm) m = tm; att = 0; sec = m === "no_duplicates" ? V.sort(() => 0.5 - Math.random()).slice(0, 4) : Array.from({length: 4}, () => V[Math.floor(Math.random() * V.length)]); }
+  rst_bg();
+  function tgFS() { const el = document.getElementById('wp'); if (!document.fullscreenElement) el.requestFullscreen(); else document.exitFullscreen(); }
+  function cc(c, pos) {
+    const b = document.getElementById(`b-${c}-${pos}`);
+    if (b.innerText === "-") { b.innerText = "❌"; b.className = "g-btn m-no"; }
+    else if (b.innerText === "❌") { b.innerText = "🎯"; b.className = "g-btn m-ok"; }
+    else { b.innerText = "-"; b.className = "g-btn"; }
+  }
+  function up() { for(let i=0;i<4;i++){ const s=document.getElementById('s'+i); s.innerText=cur[i]||""; s.className=cur[i]?"sl act":"sl"; } }
+  function pK(c) { if(cur.length>=4)return; if(m==='no_duplicates'&&cur.includes(c)){ document.getElementById('badge').innerText="❌ 重複NG！"; return; } cur.push(c); up(); }
+  function pB() { cur.pop(); up(); }
+  function setM(tm) { if(m===tm)return; document.getElementById('t-allow').className=tm==='allow_duplicates'?'t-btn active':'t-btn'; document.getElementById('t-no').className=tm==='no_duplicates'?'t-btn active':'t-btn'; fRst(tm); }
+  function send() { 
+    if(cur.length!==4) return; att++; const inp = cur.join(''); let h = 0, b = 0, s_rem = [], g_rem = [];
+    for (let i = 0; i < 4; i++) { if (cur[i] === sec[i]) h++; else { s_rem.push(sec[i]); g_rem.push(cur[i]); } }
+    for (let x of g_rem) { let idx = s_rem.indexOf(x); if (idx > -1) { b++; s_rem.splice(idx, 1); } }
+    const b_el = document.getElementById('badge'); document.getElementById('count').innerText = att;
+    let hst = `🔠 <b>${inp}</b> ➔ 🔴 <b>${h}</b>H / 🔵 <b>${b}</b>B`;
+    if (h === 4) {
+      b_el.innerText = `🎉 正解！【${inp}】`; b_el.className = "bd status-success"; hst = `🎯 <b>${inp}</b> ➔ ✨ Clear`;
+      document.getElementById('sub').disabled = true; document.getElementById('kbox').style.display = 'none'; document.getElementById('reset').style.display = 'block';
+    } else { b_el.innerText = `【${inp}】の結果`; b_el.className = "bd status-normal"; }
+    const l = document.getElementById('log'); const i = document.createElement('div'); i.className = 'item'; i.innerHTML = hst; l.insertBefore(i, l.firstChild); cur = []; up();
+  }
+  function cBd() { V.forEach(c => { for(let i=0; i<4; i++) { const b = document.getElementById(`b-${c}-${i}`); b.innerText = "-"; b.className = "g-btn"; } }); }
+  function rst() { document.getElementById('sub').disabled=false; document.getElementById('kbox').style.display='flex'; document.getElementById('reset').style.display='none'; document.getElementById('badge').innerText="入力待機中..."; document.getElementById('count').innerText="0"; document.getElementById('log').innerHTML=""; cur=[]; up(); cBd(); rst_bg(); }
+  function fRst(tm) { document.getElementById('sub').disabled=false; document.getElementById('kbox').style.display='flex'; document.getElementById('reset').style.display='none'; document.getElementById('badge').innerText="新ゲーム開始！"; document.getElementById('count').innerText="0"; document.getElementById('log').innerHTML=""; cur=[]; up(); cBd(); rst_bg(tm); }
+</script>
+</body>
+</html>
