@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8"><title>H&B BOARD</title>
 <style>
-  body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; background: #f0f4f8; min-height: 100vh; margin: 0; padding: 10px; box-sizing: border-box; }
-  #wp:fullscreen { background: #f0f4f8; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100vw; height: 100vh; }
+  body { font-family: sans-serif; display: flex; justify-content: center; align-items: flex-start; background: #f0f4f8; min-height: 100vh; margin: 0; padding: 10px; box-sizing: border-box; }
+  #wp:fullscreen { background: #f0f4f8; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; width: 100vw; height: 100vh; padding-top: 10px; }
   .fs { background: #64748b; color: #fff; border: none; padding: 8px 16px; font-weight: bold; border-radius: 8px; cursor: pointer; margin-bottom: 8px; }
   .mn { display: flex; width: 100%; max-width: 820px; background: #fff; border-radius: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); overflow: hidden; border: 1px solid #e2e8f0; }
   .lf, .rg { flex: 1; padding: 15px; text-align: center; } .rg { background: #fbfcfe; text-align: left; display: flex; flex-direction: column; gap: 8px; }
@@ -25,7 +25,7 @@
   .kb button:active { background: #e2e8f0; } .kb .bk { background: #fee2e2; color: #991b1b; } .kb .en { background: #4338ca; color: #fff; flex: 1.5; }
   #reset { width: 100%; background: #10b981; color: #fff; padding: 12px; border: none; border-radius: 12px; font-weight: bold; font-size: 16px; cursor: pointer; }
   .rg h4 { margin: 0; font-size: 13px; color: #475569; }
-  .log { height: 90px; overflow-y: auto; font-size: 12px; background: #fff; padding: 10px; border-radius: 10px; border: 1px solid #e2e8f0; box-sizing: border-box; }
+  .log { height: 180px; overflow-y: auto; font-size: 12px; background: #fff; padding: 10px; border-radius: 10px; border: 1px solid #e2e8f0; box-sizing: border-box; }
   .item { margin-bottom: 4px; padding-bottom: 4px; border-bottom: 1px dashed #e2e8f0; }
   .gd { display: flex; flex-direction: column; gap: 3px; background: #e2e8f0; padding: 4px; border-radius: 10px; }
   .g-rw { display: flex; gap: 3px; align-items: center; }
@@ -33,7 +33,6 @@
   .g-btn { flex: 1; padding: 5px 0; font-size: 11px; font-weight: bold; border: 1px solid #cbd5e1; border-radius: 6px; background: #fff; color: #475569; cursor: pointer; text-align: center; }
   .g-btn.m-no { background: #f1f5f9; color: #cbd5e1; text-decoration: line-through; opacity: 0.5; }
   .g-btn.m-ok { background: #dcfce7; color: #15803d; border-color: #86efac; }
-  /* ℹ️ ルール説明のスタイル */
   .rule-box { background: #eff6ff; border: 1px solid #bfdbfe; padding: 10px; border-radius: 10px; font-size: 11px; color: #1e3a8a; line-height: 1.5; }
   .rule-box ul { margin: 4px 0 0 0; padding-left: 15px; }
 </style>
@@ -59,16 +58,14 @@
       <button id="reset" onclick="rst()" style="display:none;">もう一度遊ぶ</button>
     </div>
     <div class="rg">
-      <!-- ℹ️ ルール説明エリア -->
       <div class="rule-box">
-        💡 <b>ゲームのルール</b>：A〜Fから選ばれた4文字のコードを当てよう！
+        💡 <b>ルール</b>：A〜Fの4文字を当てよう！
         <ul>
-          <li>🔴 <b>Hit (H)</b>：文字も、入っている位置もバッチリ的中！</li>
-          <li>🔵 <b>Blow (B)</b>：文字は合っているが、位置が違う！</li>
+          <li>🔴 <b>H</b>：文字も位置も的中 / 🔵 <b>B</b>：文字は一致、位置違い</li>
+          <li>🔀 <b>重複あり</b>：<code>AAAA</code>や<code>BBAB</code>など被りありの難関モード</li>
+          <li>🔒 <b>重複なし</b>：<code>ABCD</code>など、すべて違う文字の定番モード</li>
         </ul>
-        <small style="display:block;margin-top:4px;color:#60a5fa">※右の推理ボードはタップで ❌(除外)や 🎯(確定) にメモできます。</small>
       </div>
-      
       <h4>🧠 推理ボード</h4>
       <div class="gd">
         <div class="g-rw"><div class="g-lbl"></div><div class="g-btn" style="background:none;border:none;">1桁</div><div class="g-btn" style="background:none;border:none;">2桁</div><div class="g-btn" style="background:none;border:none;">3桁</div><div class="g-btn" style="background:none;border:none;">4桁</div></div>
@@ -80,7 +77,7 @@
           });
         </script>
       </div>
-      <h4>📜 履歴</h4><div id="log" class="log"></div>
+      <h4>📜 履歴（ヒント）</h4><div id="log" class="log"></div>
     </div>
   </div>
 </div>
@@ -115,3 +112,6 @@
   function cBd() { V.forEach(c => { for(let i=0; i<4; i++) { const b = document.getElementById(`b-${c}-${i}`); b.innerText = "-"; b.className = "g-btn"; } }); }
   function rst() { document.getElementById('sub').disabled=false; document.getElementById('kbox').style.display='flex'; document.getElementById('reset').style.display='none'; document.getElementById('badge').innerText="入力待機中..."; document.getElementById('count').innerText="0"; document.getElementById('log').innerHTML=""; cur=[]; up(); cBd(); rst_bg(); }
   function fRst(tm) { document.getElementById('sub').disabled=false; document.getElementById('kbox').style.display='flex'; document.getElementById('reset').style.display='none'; document.getElementById('badge').innerText="新ゲーム開始！"; document.getElementById('count').innerText="0"; document.getElementById('log').innerHTML=""; cur=[]; up(); cBd(); rst_bg(tm); }
+</script>
+</body>
+</html>
